@@ -1591,6 +1591,7 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
             if (typeof JSON.parse === "function") {
                 response = JSON.parse(xhr.responseText);
             } else {
+		this.log("JSON function not found. Please include polyfill");
                 response = eval("(" + xhr.responseText + ")");
             }
         } catch(err){
