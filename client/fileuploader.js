@@ -428,8 +428,8 @@ qq.FileUploaderBasic.prototype = {
     _onComplete: function(id, fileName, result){
         this._filesInProgress--;
 
-        if (!result.success){
-            var errorReason = result.error ? result.error : "Upload failure reason unknown";
+        if (typeof result.error !== "undefined" && result.error !== "") {
+	    var errorReason = result.error || "Upload failure reason unknown";
             this._options.onError(id, fileName, errorReason);
         }
     },
@@ -851,7 +851,7 @@ qq.extend(qq.FileUploader.prototype, {
         }
         qq.remove(this._find(item, 'spinner'));
 
-        if (result.success){
+	if (typeof result.error !== undefined && result.error !== "") {
             qq.addClass(item, this._classes.success);
             if (this._classes.successIcon) {
                 this._find(item, 'finished').style.display = "inline-block";
@@ -1415,7 +1415,9 @@ qq.extend(qq.UploadHandlerForm.prototype, {
             }
             response = eval("(" + innerHTML + ")");
         } catch(err){
-            response = {success: false};
+            response = {
+		error: err.message
+	    };
         }
 
         return response;
@@ -1595,7 +1597,9 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
                 response = eval("(" + xhr.responseText + ")");
             }
         } catch(err){
-            response = {};
+            response = { 
+		error: err.message
+	    };
         }
 
         if (xhr.status !== 200 && xhr.status !== 201 && xhr.status !== 202 && xhr.status !== 204) {
