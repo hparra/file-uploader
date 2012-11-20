@@ -1596,9 +1596,11 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
         } catch(err){
             response = {};
         }
-        if (xhr.status !== 200){
+
+        if (xhr.status !== 200 && xhr.status !== 201 && xhr.status !== 202 && xhr.status !== 204) {
             this._options.onError(id, name, "XHR returned response code " + xhr.status);
         }
+
         this._options.onComplete(id, name, response);
 
         this._xhrs[id] = null;
